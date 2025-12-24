@@ -49,10 +49,8 @@ public class Project {
     @Column(precision = 15, scale = 2)
     private BigDecimal hectares;
 
-    @ElementCollection
-    @CollectionTable(name = "project_communities", joinColumns = @JoinColumn(name = "project_id"))
-    @Column(name = "community")
-    private List<String> communitiesInvolved;
+    @Column(length = 1000)
+    private String communitiesInvolved;
 
     @Column(length = 1000)
     private String developerOrganizations;
@@ -121,8 +119,8 @@ public class Project {
     public BigDecimal getHectares() { return hectares; }
     public void setHectares(BigDecimal hectares) { this.hectares = hectares; }
 
-    public List<String> getCommunitiesInvolved() { return communitiesInvolved; }
-    public void setCommunitiesInvolved(List<String> communitiesInvolved) { this.communitiesInvolved = communitiesInvolved; }
+    public String getCommunitiesInvolved() { return communitiesInvolved; }
+    public void setCommunitiesInvolved(String communitiesInvolved) { this.communitiesInvolved = communitiesInvolved; }
 
     public String getDeveloperOrganizations() { return developerOrganizations; }
     public void setDeveloperOrganizations(String developerOrganizations) { this.developerOrganizations = developerOrganizations; }
