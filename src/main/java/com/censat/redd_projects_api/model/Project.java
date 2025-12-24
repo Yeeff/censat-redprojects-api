@@ -30,7 +30,7 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private Status status;
 
@@ -58,7 +58,7 @@ public class Project {
     @Column(length = 1000)
     private String collaboratingOrganizations;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "validator_id")
     private Validator validator;
 
@@ -66,7 +66,7 @@ public class Project {
     @JsonIgnore
     private List<ProjectVerifier> projectVerifiers;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "certifier_id")
     private CertifierEntity certifier;
 
