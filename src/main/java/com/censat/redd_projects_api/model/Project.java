@@ -64,11 +64,8 @@ public class Project {
     @JoinColumn(name = "validator_id")
     private Validator validator;
 
-    @OneToMany
-    @JoinTable(name = "project_verifiers",
-               joinColumns = @JoinColumn(name = "project_id"),
-               inverseJoinColumns = @JoinColumn(name = "verifier_id"))
-    private List<Verifier> verifiers;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectVerifier> projectVerifiers;
 
     @ManyToOne
     @JoinColumn(name = "certifier_id")
@@ -136,8 +133,8 @@ public class Project {
     public Validator getValidator() { return validator; }
     public void setValidator(Validator validator) { this.validator = validator; }
 
-    public List<Verifier> getVerifiers() { return verifiers; }
-    public void setVerifiers(List<Verifier> verifiers) { this.verifiers = verifiers; }
+    public List<ProjectVerifier> getProjectVerifiers() { return projectVerifiers; }
+    public void setProjectVerifiers(List<ProjectVerifier> projectVerifiers) { this.projectVerifiers = projectVerifiers; }
 
     public CertifierEntity getCertifier() { return certifier; }
     public void setCertifier(CertifierEntity certifier) { this.certifier = certifier; }

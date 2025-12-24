@@ -45,7 +45,7 @@ public class ProjectService {
             project.setDeveloperOrganizations(projectDetails.getDeveloperOrganizations());
             project.setCollaboratingOrganizations(projectDetails.getCollaboratingOrganizations());
             project.setValidator(projectDetails.getValidator());
-            project.setVerifiers(projectDetails.getVerifiers());
+            project.setProjectVerifiers(projectDetails.getProjectVerifiers());
             project.setCertifier(projectDetails.getCertifier());
             project.setRegistrationDate(projectDetails.getRegistrationDate());
             project.setQueryDate(projectDetails.getQueryDate());
