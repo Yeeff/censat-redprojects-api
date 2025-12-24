@@ -86,7 +86,7 @@ INSERT INTO projects (
     '2017-03-15',
     '2025-09-22',
     'https://example.com/pacifico',
-    ST_GeomFromText('POLYGON((-77.5 6.0, -76.5 6.0, -76.5 5.0, -77.5 5.0, -77.5 6.0))', 4326) -- Sample polygon for Chocó area
+    ST_GeomFromText('POLYGON((-77.2 6.2, -76.8 6.1, -76.5 5.8, -76.7 5.5, -77.0 5.3, -77.3 5.6, -77.5 5.9, -77.2 6.2))', 4326) -- Irregular polygon for Chocó area
 );
 
 -- Insert communities for project 1

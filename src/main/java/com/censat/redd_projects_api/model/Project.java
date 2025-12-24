@@ -1,8 +1,10 @@
 package com.censat.redd_projects_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.locationtech.jts.geom.Geometry;
+import java.util.List;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,8 +30,9 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private ProjectStatus status;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
 
     @Column(name = "start_date")
     private LocalDate startDate;
@@ -57,16 +60,19 @@ public class Project {
     @Column(length = 1000)
     private String collaboratingOrganizations;
 
-    @Column(length = 500)
-    private String validator;
+    @ManyToOne
+    @JoinColumn(name = "validator_id")
+    private Validator validator;
 
-    @ElementCollection
-    @CollectionTable(name = "project_verifiers", joinColumns = @JoinColumn(name = "project_id"))
-    @Column(name = "verifier")
-    private List<String> verifiers;
+    @OneToMany
+    @JoinTable(name = "project_verifiers",
+               joinColumns = @JoinColumn(name = "project_id"),
+               inverseJoinColumns = @JoinColumn(name = "verifier_id"))
+    private List<Verifier> verifiers;
 
-    @Enumerated(EnumType.STRING)
-    private Certifier certifier;
+    @ManyToOne
+    @JoinColumn(name = "certifier_id")
+    private CertifierEntity certifier;
 
     @Column(name = "registration_date")
     private LocalDate registrationDate;
@@ -100,8 +106,8 @@ public class Project {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public ProjectStatus getStatus() { return status; }
-    public void setStatus(ProjectStatus status) { this.status = status; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 
     public LocalDate getStartDate() { return startDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
@@ -127,14 +133,14 @@ public class Project {
     public String getCollaboratingOrganizations() { return collaboratingOrganizations; }
     public void setCollaboratingOrganizations(String collaboratingOrganizations) { this.collaboratingOrganizations = collaboratingOrganizations; }
 
-    public String getValidator() { return validator; }
-    public void setValidator(String validator) { this.validator = validator; }
+    public Validator getValidator() { return validator; }
+    public void setValidator(Validator validator) { this.validator = validator; }
 
-    public List<String> getVerifiers() { return verifiers; }
-    public void setVerifiers(List<String> verifiers) { this.verifiers = verifiers; }
+    public List<Verifier> getVerifiers() { return verifiers; }
+    public void setVerifiers(List<Verifier> verifiers) { this.verifiers = verifiers; }
 
-    public Certifier getCertifier() { return certifier; }
-    public void setCertifier(Certifier certifier) { this.certifier = certifier; }
+    public CertifierEntity getCertifier() { return certifier; }
+    public void setCertifier(CertifierEntity certifier) { this.certifier = certifier; }
 
     public LocalDate getRegistrationDate() { return registrationDate; }
     public void setRegistrationDate(LocalDate registrationDate) { this.registrationDate = registrationDate; }
@@ -148,6 +154,7 @@ public class Project {
     public Geometry getLocationGeometry() { return locationGeometry; }
     public void setLocationGeometry(Geometry locationGeometry) { this.locationGeometry = locationGeometry; }
 
+    @JsonProperty("locationGeometryWkt")
     public String getLocationGeometryWkt() {
         return locationGeometry != null ? locationGeometry.toText() : null;
     }

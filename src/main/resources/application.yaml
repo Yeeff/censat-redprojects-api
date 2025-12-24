@@ -1,6 +1,8 @@
 spring:
   application:
     name: redd-projects-api
+server:
+  port: 8080
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
