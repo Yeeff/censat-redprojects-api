@@ -1,7 +1,7 @@
 package com.censat.redd_projects_api.service;
 
 import com.censat.redd_projects_api.model.Project;
-import com.censat.redd_projects_api.model.ProjectStatus;
+import com.censat.redd_projects_api.model.Status;
 import com.censat.redd_projects_api.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,11 +64,11 @@ public class ProjectService {
         return projectRepository.findByDepartamento(departamento);
     }
 
-    public List<Project> getProjectsByStatus(ProjectStatus status) {
+    public List<Project> getProjectsByStatus(Status status) {
         return projectRepository.findByStatus(status);
     }
 
-    public List<Project> getProjectsByDepartamentoAndStatus(String departamento, ProjectStatus status) {
+    public List<Project> getProjectsByDepartamentoAndStatus(String departamento, Status status) {
         return projectRepository.findByDepartamentoAndStatus(departamento, status);
     }
 }

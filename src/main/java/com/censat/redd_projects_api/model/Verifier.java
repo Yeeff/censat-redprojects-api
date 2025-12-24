@@ -1,5 +1,6 @@
 package com.censat.redd_projects_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class Verifier {
     private String name;
 
     @OneToMany(mappedBy = "verifier", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ProjectVerifier> projectVerifiers;
 
     // Constructors

@@ -1,7 +1,9 @@
 package com.censat.redd_projects_api.controller;
 
 import com.censat.redd_projects_api.model.Project;
-import com.censat.redd_projects_api.model.ProjectStatus;
+import com.censat.redd_projects_api.model.Status;
+import com.censat.redd_projects_api.repository.ProjectRepository;
+import com.censat.redd_projects_api.repository.StatusRepository;
 import com.censat.redd_projects_api.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,12 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private StatusRepository statusRepository;
 
     @GetMapping
     public List<Project> getAllProjects() {
@@ -53,15 +61,19 @@ public class ProjectController {
         return projectService.getProjectsByDepartamento(departamento);
     }
 
-    @GetMapping("/status/{status}")
-    public List<Project> getProjectsByStatus(@PathVariable ProjectStatus status) {
+    @GetMapping("/status/{statusName}")
+    public List<Project> getProjectsByStatus(@PathVariable String statusName) {
+        Status status = statusRepository.findByName(statusName).orElse(null);
+        if (status == null) return List.of();
         return projectService.getProjectsByStatus(status);
     }
 
     @GetMapping("/filter")
     public List<Project> getProjectsByDepartamentoAndStatus(
             @RequestParam String departamento,
-            @RequestParam ProjectStatus status) {
+            @RequestParam String statusName) {
+        Status status = statusRepository.findByName(statusName).orElse(null);
+        if (status == null) return List.of();
         return projectService.getProjectsByDepartamentoAndStatus(departamento, status);
     }
 }

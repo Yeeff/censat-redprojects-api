@@ -63,6 +63,7 @@ public class Project {
     private Validator validator;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ProjectVerifier> projectVerifiers;
 
     @ManyToOne
