@@ -1,5 +1,6 @@
 package com.censat.redd_projects_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.locationtech.jts.geom.Geometry;
 
@@ -76,6 +77,7 @@ public class Project {
     @Column(length = 2000)
     private String link;
 
+    @JsonIgnore
     @Column(columnDefinition = "geometry")
     private Geometry locationGeometry;
 
@@ -145,4 +147,8 @@ public class Project {
 
     public Geometry getLocationGeometry() { return locationGeometry; }
     public void setLocationGeometry(Geometry locationGeometry) { this.locationGeometry = locationGeometry; }
+
+    public String getLocationGeometryWkt() {
+        return locationGeometry != null ? locationGeometry.toText() : null;
+    }
 }
