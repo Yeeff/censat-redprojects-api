@@ -58,6 +58,8 @@ public class ProjectService {
             project.setRegistrationDate(projectDetails.getRegistrationDate());
             project.setQueryDate(projectDetails.getQueryDate());
             project.setLink(projectDetails.getLink());
+            project.setValidatorString(projectDetails.getValidatorString());
+            project.setVerifiersString(projectDetails.getVerifiersString());
             project.setLocationGeometry(projectDetails.getLocationGeometry());
             return projectRepository.save(project);
         }

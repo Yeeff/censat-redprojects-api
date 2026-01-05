@@ -80,6 +80,13 @@ public class Project {
     @Column(length = 2000)
     private String link;
 
+    // Simple string fields for validator and verifiers (for simplified usage)
+    @Column(length = 500)
+    private String validatorString;
+
+    @Column(length = 1000)
+    private String verifiersString;
+
     @JsonIgnore
     @Column(columnDefinition = "geometry")
     private Geometry locationGeometry;
@@ -147,6 +154,12 @@ public class Project {
 
     public String getLink() { return link; }
     public void setLink(String link) { this.link = link; }
+
+    public String getValidatorString() { return validatorString; }
+    public void setValidatorString(String validatorString) { this.validatorString = validatorString; }
+
+    public String getVerifiersString() { return verifiersString; }
+    public void setVerifiersString(String verifiersString) { this.verifiersString = verifiersString; }
 
     public Geometry getLocationGeometry() { return locationGeometry; }
     public void setLocationGeometry(Geometry locationGeometry) { this.locationGeometry = locationGeometry; }
