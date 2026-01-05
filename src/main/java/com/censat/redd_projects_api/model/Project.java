@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.locationtech.jts.geom.Geometry;
+import org.wololo.jts2geojson.GeoJSONWriter;
 import java.util.List;
 
 import java.math.BigDecimal;
@@ -153,5 +154,14 @@ public class Project {
     @JsonProperty("locationGeometryWkt")
     public String getLocationGeometryWkt() {
         return locationGeometry != null ? locationGeometry.toText() : null;
+    }
+
+    @JsonProperty("locationGeometryGeoJson")
+    public String getLocationGeometryGeoJson() {
+        if (locationGeometry != null) {
+            GeoJSONWriter writer = new GeoJSONWriter();
+            return writer.write(locationGeometry).toString();
+        }
+        return null;
     }
 }
