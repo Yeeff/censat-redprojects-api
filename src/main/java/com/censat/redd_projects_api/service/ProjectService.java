@@ -1,5 +1,6 @@
 package com.censat.redd_projects_api.service;
 
+import com.censat.redd_projects_api.dto.ProjectSummary;
 import com.censat.redd_projects_api.model.Project;
 import com.censat.redd_projects_api.model.Status;
 import com.censat.redd_projects_api.repository.ProjectRepository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -17,6 +19,12 @@ public class ProjectService {
 
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
+    }
+
+    public List<ProjectSummary> getAllProjectsSummary() {
+        return projectRepository.findAll().stream()
+                .map(ProjectSummary::new)
+                .collect(Collectors.toList());
     }
 
     public Optional<Project> getProjectById(Long id) {

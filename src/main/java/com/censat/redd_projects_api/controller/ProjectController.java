@@ -1,5 +1,6 @@
 package com.censat.redd_projects_api.controller;
 
+import com.censat.redd_projects_api.dto.ProjectSummary;
 import com.censat.redd_projects_api.model.Project;
 import com.censat.redd_projects_api.model.Status;
 import com.censat.redd_projects_api.repository.ProjectRepository;
@@ -27,6 +28,11 @@ public class ProjectController {
     @GetMapping
     public List<Project> getAllProjects() {
         return projectService.getAllProjects();
+    }
+
+    @GetMapping("/list")
+    public List<ProjectSummary> getAllProjectsSummary() {
+        return projectService.getAllProjectsSummary();
     }
 
     @GetMapping("/{id}")
