@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
 import org.wololo.jts2geojson.GeoJSONWriter;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(nullable = false)
@@ -167,6 +168,19 @@ public class Project {
     @JsonProperty("locationGeometryWkt")
     public String getLocationGeometryWkt() {
         return locationGeometry != null ? locationGeometry.toText() : null;
+    }
+
+    @JsonProperty("locationGeometryWkt")
+    public void setLocationGeometryWkt(String wkt) {
+        if (wkt != null && !wkt.trim().isEmpty()) {
+            try {
+                WKTReader reader = new WKTReader();
+                this.locationGeometry = reader.read(wkt);
+            } catch (Exception e) {
+                // Log error or handle
+                e.printStackTrace();
+            }
+        }
     }
 
     @JsonProperty("locationGeometryGeoJson")
