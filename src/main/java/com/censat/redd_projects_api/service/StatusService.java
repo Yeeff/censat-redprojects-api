@@ -27,10 +27,13 @@ public class StatusService {
     }
 
     public Status updateStatus(Long id, Status statusDetails) {
+        System.out.println("Received statusDetails: name=" + statusDetails.getName() + ", desc=" + statusDetails.getDescription());
         Optional<Status> optionalStatus = statusRepository.findById(id);
         if (optionalStatus.isPresent()) {
             Status status = optionalStatus.get();
             status.setName(statusDetails.getName());
+            status.setDescription(statusDetails.getDescription());
+            System.out.println("Updating status: " + status.getId() + ", name: " + status.getName() + ", desc: " + status.getDescription());
             return statusRepository.save(status);
         }
         return null;
