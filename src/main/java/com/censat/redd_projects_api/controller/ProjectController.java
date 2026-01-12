@@ -1,8 +1,10 @@
 package com.censat.redd_projects_api.controller;
 
 import com.censat.redd_projects_api.dto.ProjectSummary;
+import com.censat.redd_projects_api.model.CertifierEntity;
 import com.censat.redd_projects_api.model.Project;
 import com.censat.redd_projects_api.model.Status;
+import com.censat.redd_projects_api.repository.CertifierRepository;
 import com.censat.redd_projects_api.repository.ProjectRepository;
 import com.censat.redd_projects_api.repository.StatusRepository;
 import com.censat.redd_projects_api.service.ProjectService;
@@ -25,14 +27,21 @@ public class ProjectController {
     @Autowired
     private StatusRepository statusRepository;
 
+    @Autowired
+    private CertifierRepository certifierRepository;
+
     @GetMapping
     public List<Project> getAllProjects() {
         return projectService.getAllProjects();
     }
 
     @GetMapping("/list")
-    public List<ProjectSummary> getAllProjectsSummary() {
-        return projectService.getAllProjectsSummary();
+    public List<ProjectSummary> getAllProjectsSummary(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String departamento,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) Long certifierId) {
+        return projectService.getFilteredProjectsSummary(name, departamento, estado, certifierId);
     }
 
     @GetMapping("/{id}")

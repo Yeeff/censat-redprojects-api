@@ -1,9 +1,12 @@
 package com.censat.redd_projects_api.service;
 
 import com.censat.redd_projects_api.dto.ProjectSummary;
+import com.censat.redd_projects_api.model.CertifierEntity;
 import com.censat.redd_projects_api.model.Project;
 import com.censat.redd_projects_api.model.Status;
+import com.censat.redd_projects_api.repository.CertifierRepository;
 import com.censat.redd_projects_api.repository.ProjectRepository;
+import com.censat.redd_projects_api.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +20,50 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private StatusRepository statusRepository;
+
+    @Autowired
+    private CertifierRepository certifierRepository;
+
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
     }
 
     public List<ProjectSummary> getAllProjectsSummary() {
         return projectRepository.findAll().stream()
+                .map(ProjectSummary::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProjectSummary> getFilteredProjectsSummary(String name, String departamento, String estado, Long certifierId) {
+        List<Project> projects = projectRepository.findAll();
+
+        if (name != null && !name.trim().isEmpty()) {
+            projects = projects.stream()
+                    .filter(p -> p.getName() != null && p.getName().toLowerCase().contains(name.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        if (departamento != null && !departamento.trim().isEmpty()) {
+            projects = projects.stream()
+                    .filter(p -> p.getDepartamento() != null && p.getDepartamento().toLowerCase().contains(departamento.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        if (estado != null && !estado.trim().isEmpty()) {
+            projects = projects.stream()
+                    .filter(p -> p.getStatus() != null && p.getStatus().getName().equalsIgnoreCase(estado))
+                    .collect(Collectors.toList());
+        }
+
+        if (certifierId != null) {
+            projects = projects.stream()
+                    .filter(p -> p.getCertifier() != null && p.getCertifier().getId().equals(certifierId))
+                    .collect(Collectors.toList());
+        }
+
+        return projects.stream()
                 .map(ProjectSummary::new)
                 .collect(Collectors.toList());
     }
@@ -80,5 +121,13 @@ public class ProjectService {
 
     public List<Project> getProjectsByDepartamentoAndStatus(String departamento, Status status) {
         return projectRepository.findByDepartamentoAndStatus(departamento, status);
+    }
+
+    public List<Project> getProjectsByName(String name) {
+        return projectRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Project> getProjectsByCertifier(CertifierEntity certifier) {
+        return projectRepository.findByCertifier(certifier);
     }
 }
