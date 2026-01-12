@@ -9,6 +9,7 @@ import com.censat.redd_projects_api.repository.ProjectRepository;
 import com.censat.redd_projects_api.repository.StatusRepository;
 import com.censat.redd_projects_api.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,12 +37,14 @@ public class ProjectController {
     }
 
     @GetMapping("/list")
-    public List<ProjectSummary> getAllProjectsSummary(
+    public Page<ProjectSummary> getAllProjectsSummary(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String departamento,
             @RequestParam(required = false) String estado,
-            @RequestParam(required = false) Long certifierId) {
-        return projectService.getFilteredProjectsSummary(name, departamento, estado, certifierId);
+            @RequestParam(required = false) Long certifierId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return projectService.getFilteredProjectsSummary(name, departamento, estado, certifierId, page, size);
     }
 
     @GetMapping("/{id}")

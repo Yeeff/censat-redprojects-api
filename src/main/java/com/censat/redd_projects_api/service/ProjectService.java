@@ -8,6 +8,10 @@ import com.censat.redd_projects_api.repository.CertifierRepository;
 import com.censat.redd_projects_api.repository.ProjectRepository;
 import com.censat.redd_projects_api.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,36 +40,39 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProjectSummary> getFilteredProjectsSummary(String name, String departamento, String estado, Long certifierId) {
-        List<Project> projects = projectRepository.findAll();
+    public Page<ProjectSummary> getFilteredProjectsSummary(String name, String departamento, String estado, Long certifierId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Project> allProjects = projectRepository.findAll();
 
-        if (name != null && !name.trim().isEmpty()) {
-            projects = projects.stream()
-                    .filter(p -> p.getName() != null && p.getName().toLowerCase().contains(name.toLowerCase()))
-                    .collect(Collectors.toList());
-        }
+        // Apply filters
+        List<Project> filteredProjects = allProjects.stream()
+                .filter(p -> {
+                    if (name != null && !name.trim().isEmpty()) {
+                        if (p.getName() == null || !p.getName().toLowerCase().contains(name.toLowerCase())) return false;
+                    }
+                    if (departamento != null && !departamento.trim().isEmpty()) {
+                        if (p.getDepartamento() == null || !p.getDepartamento().toLowerCase().contains(departamento.toLowerCase())) return false;
+                    }
+                    if (estado != null && !estado.trim().isEmpty()) {
+                        if (p.getStatus() == null || !p.getStatus().getName().equalsIgnoreCase(estado)) return false;
+                    }
+                    if (certifierId != null) {
+                        if (p.getCertifier() == null || !p.getCertifier().getId().equals(certifierId)) return false;
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
 
-        if (departamento != null && !departamento.trim().isEmpty()) {
-            projects = projects.stream()
-                    .filter(p -> p.getDepartamento() != null && p.getDepartamento().toLowerCase().contains(departamento.toLowerCase()))
-                    .collect(Collectors.toList());
-        }
+        // Manual pagination
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), filteredProjects.size());
+        List<Project> pageContent = filteredProjects.subList(start, end);
 
-        if (estado != null && !estado.trim().isEmpty()) {
-            projects = projects.stream()
-                    .filter(p -> p.getStatus() != null && p.getStatus().getName().equalsIgnoreCase(estado))
-                    .collect(Collectors.toList());
-        }
-
-        if (certifierId != null) {
-            projects = projects.stream()
-                    .filter(p -> p.getCertifier() != null && p.getCertifier().getId().equals(certifierId))
-                    .collect(Collectors.toList());
-        }
-
-        return projects.stream()
+        List<ProjectSummary> summaries = pageContent.stream()
                 .map(ProjectSummary::new)
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(summaries, pageable, filteredProjects.size());
     }
 
     public Optional<Project> getProjectById(Long id) {
