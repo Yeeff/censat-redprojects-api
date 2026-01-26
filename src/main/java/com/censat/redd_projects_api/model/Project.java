@@ -57,6 +57,12 @@ public class Project {
     @Column(length = 1000)
     private String developerOrganizations;
 
+    @Column(length = 500)
+    private String projectType;
+
+    @Column(length = 100)
+    private String duration;
+
     @Column(length = 1000)
     private String collaboratingOrganizations;
 
@@ -137,6 +143,12 @@ public class Project {
 
     public String getCollaboratingOrganizations() { return collaboratingOrganizations; }
     public void setCollaboratingOrganizations(String collaboratingOrganizations) { this.collaboratingOrganizations = collaboratingOrganizations; }
+
+    public String getProjectType() { return projectType; }
+    public void setProjectType(String projectType) { this.projectType = projectType; }
+
+    public String getDuration() { return duration; }
+    public void setDuration(String duration) { this.duration = duration; }
 
     public Validator getValidator() { return validator; }
     public void setValidator(Validator validator) { this.validator = validator; }
