@@ -6,13 +6,11 @@ import java.util.List;
 public class GeometryDTO {
 
     private String type;
-    private List<List<List<List<Double>>>> coordinates;
+    private Object coordinates; // Cambiar a Object para aceptar cualquier estructura
 
-    // Constructors
     public GeometryDTO() {
     }
 
-    // Getters and Setters
     public String getType() {
         return type;
     }
@@ -21,11 +19,11 @@ public class GeometryDTO {
         this.type = type;
     }
 
-    public List<List<List<List<Double>>>> getCoordinates() {
+    public Object getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(List<List<List<List<Double>>>> coordinates) {
+    public void setCoordinates(Object coordinates) {
         this.coordinates = coordinates;
     }
 }

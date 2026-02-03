@@ -2,6 +2,7 @@ package com.censat.redd_projects_api.service;
 
 import com.censat.redd_projects_api.dto.FeatureDTO;
 import com.censat.redd_projects_api.dto.GeoJsonFeatureCollectionDTO;
+import com.censat.redd_projects_api.dto.GeometryDTO;
 import com.censat.redd_projects_api.model.Department;
 import com.censat.redd_projects_api.repository.DepartmentRepository;
 import org.locationtech.jts.geom.*;
@@ -73,11 +74,19 @@ public class DepartmentService {
         return featureCollection;
     }
 
-    private MultiPolygon convertToMultiPolygon(com.censat.redd_projects_api.dto.GeometryDTO geometryDTO, GeometryFactory geometryFactory) {
-        List<Polygon> polygons = new ArrayList<>();
+    private MultiPolygon convertToMultiPolygon(GeometryDTO geometryDTO, GeometryFactory geometryFactory) {
+        List<?> coords = (List<?>) geometryDTO.getCoordinates();
 
-        for (List<List<List<Double>>> polygonCoords : geometryDTO.getCoordinates()) {
-            Polygon polygon = createPolygon(polygonCoords, geometryFactory);
+        // Si es Polygon (3 niveles)
+        if ("Polygon".equals(geometryDTO.getType())) {
+            Polygon polygon = createPolygon((List<List<List<Double>>>) coords, geometryFactory);
+            return geometryFactory.createMultiPolygon(new Polygon[]{polygon});
+        }
+
+        // Si es MultiPolygon (4 niveles)
+        List<Polygon> polygons = new ArrayList<>();
+        for (Object polygonCoords : coords) {
+            Polygon polygon = createPolygon((List<List<List<Double>>>) polygonCoords, geometryFactory);
             polygons.add(polygon);
         }
 
