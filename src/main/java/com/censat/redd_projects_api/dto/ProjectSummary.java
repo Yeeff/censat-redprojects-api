@@ -19,7 +19,7 @@ public class ProjectSummary {
     private LocalDate endDate;
     private LocalDate pddStartDate;
     private LocalDate pddEndDate;
-    private BigDecimal hectares;
+    private String hectares;
     private String communitiesInvolved;
     private String developerOrganizations;
     private String collaboratingOrganizations;
@@ -28,6 +28,15 @@ public class ProjectSummary {
     private LocalDate registrationDate;
     private LocalDate queryDate;
     private String link;
+
+    // New fields
+    private String areaDistribution;
+    private String projectAreaHectares;
+    private String renareRegistration;
+    private String deforestationDrivers;
+    private String violatedSafeguards;
+    private String contractType;
+    private String carbonRating;
 
     // Default constructor
     public ProjectSummary() {}
@@ -53,6 +62,13 @@ public class ProjectSummary {
         this.registrationDate = project.getRegistrationDate();
         this.queryDate = project.getQueryDate();
         this.link = project.getLink();
+        this.areaDistribution = project.getAreaDistribution();
+        this.projectAreaHectares = project.getProjectAreaHectares();
+        this.renareRegistration = project.getRenareRegistration();
+        this.deforestationDrivers = project.getDeforestationDrivers();
+        this.violatedSafeguards = project.getViolatedSafeguards();
+        this.contractType = project.getContractType();
+        this.carbonRating = project.getCarbonRating();
     }
 
     // Getters and Setters
@@ -86,8 +102,8 @@ public class ProjectSummary {
     public LocalDate getPddEndDate() { return pddEndDate; }
     public void setPddEndDate(LocalDate pddEndDate) { this.pddEndDate = pddEndDate; }
 
-    public BigDecimal getHectares() { return hectares; }
-    public void setHectares(BigDecimal hectares) { this.hectares = hectares; }
+    public String getHectares() { return hectares; }
+    public void setHectares(String hectares) { this.hectares = hectares; }
 
     public String getCommunitiesInvolved() { return communitiesInvolved; }
     public void setCommunitiesInvolved(String communitiesInvolved) { this.communitiesInvolved = communitiesInvolved; }
@@ -112,4 +128,26 @@ public class ProjectSummary {
 
     public String getLink() { return link; }
     public void setLink(String link) { this.link = link; }
+
+    // New getters and setters
+    public String getAreaDistribution() { return areaDistribution; }
+    public void setAreaDistribution(String areaDistribution) { this.areaDistribution = areaDistribution; }
+
+    public String getProjectAreaHectares() { return projectAreaHectares; }
+    public void setProjectAreaHectares(String projectAreaHectares) { this.projectAreaHectares = projectAreaHectares; }
+
+    public String getRenareRegistration() { return renareRegistration; }
+    public void setRenareRegistration(String renareRegistration) { this.renareRegistration = renareRegistration; }
+
+    public String getDeforestationDrivers() { return deforestationDrivers; }
+    public void setDeforestationDrivers(String deforestationDrivers) { this.deforestationDrivers = deforestationDrivers; }
+
+    public String getViolatedSafeguards() { return violatedSafeguards; }
+    public void setViolatedSafeguards(String violatedSafeguards) { this.violatedSafeguards = violatedSafeguards; }
+
+    public String getContractType() { return contractType; }
+    public void setContractType(String contractType) { this.contractType = contractType; }
+
+    public String getCarbonRating() { return carbonRating; }
+    public void setCarbonRating(String carbonRating) { this.carbonRating = carbonRating; }
 }

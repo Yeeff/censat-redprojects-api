@@ -48,13 +48,13 @@ public class Project {
     @Column(name = "pdd_end_date")
     private LocalDate pddEndDate;
 
-    @Column(precision = 15, scale = 2)
-    private BigDecimal hectares;
+    @Column(columnDefinition = "TEXT")
+    private String hectares;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String communitiesInvolved;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String developerOrganizations;
 
     @Column(length = 500)
@@ -63,7 +63,7 @@ public class Project {
     @Column(length = 100)
     private String duration;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String collaboratingOrganizations;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -88,11 +88,33 @@ public class Project {
     private String link;
 
     // Simple string fields for validator and verifiers (for simplified usage)
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String validatorString;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String verifiersString;
+
+    // New fields for Project details
+    @Column(name = "area_distribution", columnDefinition = "TEXT")
+    private String areaDistribution;
+
+    @Column(name = "project_area_hectares", columnDefinition = "TEXT")
+    private String projectAreaHectares;
+
+    @Column(name = "renare_registration", columnDefinition = "TEXT")
+    private String renareRegistration;
+
+    @Column(name = "deforestation_drivers", columnDefinition = "TEXT")
+    private String deforestationDrivers;
+
+    @Column(name = "violated_safeguards", columnDefinition = "TEXT")
+    private String violatedSafeguards;
+
+    @Column(name = "contract_type", columnDefinition = "TEXT")
+    private String contractType;
+
+    @Column(name = "carbon_rating", columnDefinition = "TEXT")
+    private String carbonRating;
 
     @JsonIgnore
     @Column(columnDefinition = "geometry")
@@ -132,8 +154,8 @@ public class Project {
     public LocalDate getPddEndDate() { return pddEndDate; }
     public void setPddEndDate(LocalDate pddEndDate) { this.pddEndDate = pddEndDate; }
 
-    public BigDecimal getHectares() { return hectares; }
-    public void setHectares(BigDecimal hectares) { this.hectares = hectares; }
+    public String getHectares() { return hectares; }
+    public void setHectares(String hectares) { this.hectares = hectares; }
 
     public String getCommunitiesInvolved() { return communitiesInvolved; }
     public void setCommunitiesInvolved(String communitiesInvolved) { this.communitiesInvolved = communitiesInvolved; }
@@ -173,6 +195,28 @@ public class Project {
 
     public String getVerifiersString() { return verifiersString; }
     public void setVerifiersString(String verifiersString) { this.verifiersString = verifiersString; }
+
+    // New getters and setters
+    public String getAreaDistribution() { return areaDistribution; }
+    public void setAreaDistribution(String areaDistribution) { this.areaDistribution = areaDistribution; }
+
+    public String getProjectAreaHectares() { return projectAreaHectares; }
+    public void setProjectAreaHectares(String projectAreaHectares) { this.projectAreaHectares = projectAreaHectares; }
+
+    public String getRenareRegistration() { return renareRegistration; }
+    public void setRenareRegistration(String renareRegistration) { this.renareRegistration = renareRegistration; }
+
+    public String getDeforestationDrivers() { return deforestationDrivers; }
+    public void setDeforestationDrivers(String deforestationDrivers) { this.deforestationDrivers = deforestationDrivers; }
+
+    public String getViolatedSafeguards() { return violatedSafeguards; }
+    public void setViolatedSafeguards(String violatedSafeguards) { this.violatedSafeguards = violatedSafeguards; }
+
+    public String getContractType() { return contractType; }
+    public void setContractType(String contractType) { this.contractType = contractType; }
+
+    public String getCarbonRating() { return carbonRating; }
+    public void setCarbonRating(String carbonRating) { this.carbonRating = carbonRating; }
 
     public Geometry getLocationGeometry() { return locationGeometry; }
     public void setLocationGeometry(Geometry locationGeometry) { this.locationGeometry = locationGeometry; }
