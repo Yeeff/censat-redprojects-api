@@ -2,13 +2,13 @@ spring:
   application:
     name: redd-projects-api
   datasource:
-    url: jdbc:postgresql://${DB_HOST:3.15.156.162}:${DB_PORT:5432}/${DB_NAME:gisdb}
-    username: ${DB_USER:gisuser}
-    password: ${DB_PASSWORD:gispassword}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:mysecretpassword}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: ${DDL_AUTO:validate}
+      ddl-auto: ${DDL_AUTO:update}
     show-sql: ${SHOW_SQL:false}
 
 # CORS Configuration
