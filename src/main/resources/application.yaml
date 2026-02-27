@@ -1,11 +1,6 @@
 spring:
   application:
     name: redd-projects-api
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:mysecretpassword}
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: ${DDL_AUTO:update}
