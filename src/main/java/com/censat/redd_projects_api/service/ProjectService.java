@@ -7,6 +7,8 @@ import com.censat.redd_projects_api.model.Status;
 import com.censat.redd_projects_api.repository.CertifierRepository;
 import com.censat.redd_projects_api.repository.ProjectRepository;
 import com.censat.redd_projects_api.repository.StatusRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
+
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -31,16 +35,20 @@ public class ProjectService {
     private CertifierRepository certifierRepository;
 
     public List<Project> getAllProjects() {
+        logger.debug("ProjectService: Obteniendo todos los proyectos");
         return projectRepository.findAll();
     }
 
     public List<ProjectSummary> getAllProjectsSummary() {
+        logger.debug("ProjectService: Obteniendo resumen de todos los proyectos");
         return projectRepository.findAll().stream()
                 .map(ProjectSummary::new)
                 .collect(Collectors.toList());
     }
 
     public Page<ProjectSummary> getFilteredProjectsSummary(String name, String departamento, String estado, Long certifierId, int page, int size) {
+        logger.debug("ProjectService: Obteniendo proyectos filtrados. Filtros: nombre={}, departamento={}, estado={}, certifierId={}", 
+                    name, departamento, estado, certifierId);
         Pageable pageable = PageRequest.of(page, size);
         List<Project> allProjects = projectRepository.findAll();
 
@@ -72,18 +80,24 @@ public class ProjectService {
                 .map(ProjectSummary::new)
                 .collect(Collectors.toList());
 
+        logger.info("ProjectService: Se encontraron {} proyectos que coinciden con los filtros", filteredProjects.size());
         return new PageImpl<>(summaries, pageable, filteredProjects.size());
     }
 
     public Optional<Project> getProjectById(Long id) {
+        logger.debug("ProjectService: Buscando proyecto con ID: {}", id);
         return projectRepository.findById(id);
     }
 
     public Project createProject(Project project) {
-        return projectRepository.save(project);
+        logger.info("ProjectService: Creando nuevo proyecto: {}", project.getName());
+        Project saved = projectRepository.save(project);
+        logger.info("ProjectService: Proyecto creado con ID: {}", saved.getId());
+        return saved;
     }
 
     public Project updateProject(Long id, Project projectDetails) {
+        logger.info("ProjectService: Actualizando proyecto con ID: {}", id);
         Optional<Project> optionalProject = projectRepository.findById(id);
         if (optionalProject.isPresent()) {
             Project project = optionalProject.get();
@@ -109,32 +123,42 @@ public class ProjectService {
             project.setValidatorString(projectDetails.getValidatorString());
             project.setVerifiersString(projectDetails.getVerifiersString());
             project.setLocationGeometry(projectDetails.getLocationGeometry());
-            return projectRepository.save(project);
+            Project updated = projectRepository.save(project);
+            logger.info("ProjectService: Proyecto {} actualizado exitosamente", id);
+            return updated;
         }
+        logger.warn("ProjectService: No se encontró el proyecto con ID: {} para actualizar", id);
         return null;
     }
 
     public void deleteProject(Long id) {
+        logger.info("ProjectService: Eliminando proyecto con ID: {}", id);
         projectRepository.deleteById(id);
+        logger.info("ProjectService: Proyecto {} eliminado exitosamente", id);
     }
 
     public List<Project> getProjectsByDepartamento(String departamento) {
+        logger.debug("ProjectService: Buscando proyectos por departamento: {}", departamento);
         return projectRepository.findByDepartamento(departamento);
     }
 
     public List<Project> getProjectsByStatus(Status status) {
+        logger.debug("ProjectService: Buscando proyectos por estado: {}", status.getName());
         return projectRepository.findByStatus(status);
     }
 
     public List<Project> getProjectsByDepartamentoAndStatus(String departamento, Status status) {
+        logger.debug("ProjectService: Buscando proyectos por departamento y estado: {}, {}", departamento, status.getName());
         return projectRepository.findByDepartamentoAndStatus(departamento, status);
     }
 
     public List<Project> getProjectsByName(String name) {
+        logger.debug("ProjectService: Buscando proyectos por nombre: {}", name);
         return projectRepository.findByNameContainingIgnoreCase(name);
     }
 
     public List<Project> getProjectsByCertifier(CertifierEntity certifier) {
+        logger.debug("ProjectService: Buscando proyectos por certificador: {}", certifier.getName());
         return projectRepository.findByCertifier(certifier);
     }
 }

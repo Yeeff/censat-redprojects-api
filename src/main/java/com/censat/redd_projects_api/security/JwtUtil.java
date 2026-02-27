@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -16,6 +18,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
     private static final String SECRET = "mySecretKeyForJWTThatIsAtLeast32CharactersLong";
     private static final int JWT_EXPIRATION = 86400000; // 24 hours
 
@@ -25,7 +28,9 @@ public class JwtUtil {
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+        String token = createToken(claims, username);
+        logger.info("Generated JWT token for user: {}", username);
+        return token;
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -63,7 +68,18 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (username.equals(extractedUsername) && !isTokenExpired(token));
+        try {
+            final String extractedUsername = extractUsername(token);
+            boolean isValid = (username.equals(extractedUsername) && !isTokenExpired(token));
+            if (isValid) {
+                logger.info("Token validated successfully for user: {}", username);
+            } else {
+                logger.warn("Token validation failed for user: {}", username);
+            }
+            return isValid;
+        } catch (Exception e) {
+            logger.error("Error validating token for user: {} - {}", username, e.getMessage());
+            return false;
+        }
     }
 }

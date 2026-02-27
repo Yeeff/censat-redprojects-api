@@ -1,5 +1,7 @@
 package com.censat.redd_projects_api.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +25,15 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        logger.info("Configurando seguridad HTTP...");
+        
         http.csrf().disable()
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(authz -> authz
@@ -41,11 +47,15 @@ public class SecurityConfig {
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+        logger.info("Configuración de seguridad completada. Rutas públicas: /api/auth/**, GET /api/**");
+        
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        logger.debug("Configurando CORS...");
+        
         CorsConfiguration configuration = new CorsConfiguration();
         // Use wildcard for development
         configuration.setAllowedOrigins(Arrays.asList("*"));
@@ -55,16 +65,21 @@ public class SecurityConfig {
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+        
+        logger.debug("CORS configurado: métodos permitidos: GET, POST, PUT, DELETE, OPTIONS");
+        
         return source;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        logger.info("Inicializando codificador de contraseñas BCrypt");
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        logger.info("Inicializando AuthenticationManager");
         return config.getAuthenticationManager();
     }
 }

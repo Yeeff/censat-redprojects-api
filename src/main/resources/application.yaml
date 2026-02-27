@@ -12,3 +12,19 @@ cors:
 
 server:
   port: ${SERVER_PORT:8096}
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.censat.redd_projects_api: INFO
+    org.springframework.web: INFO
+    org.hibernate: WARN
+    com.zaxxer.hikari: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/censat-api.log
+    max-size: 10MB
+    max-history: 30
