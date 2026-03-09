@@ -98,9 +98,21 @@ public class ProjectService {
 
     public Project updateProject(Long id, Project projectDetails) {
         logger.info("ProjectService: Actualizando proyecto con ID: {}", id);
+        
+        // Log detallado
+        logger.info("ProjectService: Datos recibidos - name={}, locationGeometry={}, departamento={}",
+            projectDetails.getName(),
+            projectDetails.getLocationGeometry() != null ? "presente" : "null",
+            projectDetails.getDepartamento());
+            
         Optional<Project> optionalProject = projectRepository.findById(id);
         if (optionalProject.isPresent()) {
             Project project = optionalProject.get();
+            
+            // Log del estado anterior
+            logger.info("ProjectService: Estado anterior - locationGeometry={}",
+                project.getLocationGeometry() != null ? "presente" : "null");
+            
             project.setName(projectDetails.getName());
             project.setLocation(projectDetails.getLocation());
             project.setDepartamento(projectDetails.getDepartamento());
@@ -123,7 +135,17 @@ public class ProjectService {
             project.setValidatorString(projectDetails.getValidatorString());
             project.setVerifiersString(projectDetails.getVerifiersString());
             project.setLocationGeometry(projectDetails.getLocationGeometry());
+            
+            // Log después de setear
+            logger.info("ProjectService: Después de setear - locationGeometry={}",
+                project.getLocationGeometry() != null ? "presente" : "null");
+            
             Project updated = projectRepository.save(project);
+            
+            // Log del estado después de guardar
+            logger.info("ProjectService: Después de guardar - locationGeometry={}",
+                updated.getLocationGeometry() != null ? "presente" : "null");
+            
             logger.info("ProjectService: Proyecto {} actualizado exitosamente", id);
             return updated;
         }

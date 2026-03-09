@@ -221,7 +221,6 @@ public class Project {
     public Geometry getLocationGeometry() { return locationGeometry; }
     public void setLocationGeometry(Geometry locationGeometry) { this.locationGeometry = locationGeometry; }
 
-    @JsonIgnore
     @JsonProperty("locationGeometryWkt")
     public String getLocationGeometryWkt() {
         return locationGeometry != null ? locationGeometry.toText() : null;

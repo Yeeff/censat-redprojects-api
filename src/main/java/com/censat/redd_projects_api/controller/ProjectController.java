@@ -64,6 +64,8 @@ public class ProjectController {
         return projectService.getProjectById(id)
                 .map(project -> {
                     logger.info("GET /api/projects/{} - Proyecto encontrado: {}", id, project.getName());
+                    logger.info("GET /api/projects/{} - locationGeometryWkt presente: {}", 
+                        id, project.getLocationGeometryWkt() != null ? "SI" : "NO");
                     return ResponseEntity.ok(project);
                 })
                 .orElseGet(() -> {
@@ -83,6 +85,19 @@ public class ProjectController {
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project projectDetails) {
         logger.info("PUT /api/projects/{} - Actualizando proyecto", id);
+        
+        // Log detallado de los datos recibidos
+        logger.info("PUT /api/projects/{} - Datos recibidos: name={}, locationGeometry={}", 
+            id, 
+            projectDetails.getName(),
+            projectDetails.getLocationGeometry() != null ? "presente" : "null");
+        
+        if (projectDetails.getLocationGeometry() != null) {
+            logger.info("PUT /api/projects/{} - Geometry type: {}", 
+                id, 
+                projectDetails.getLocationGeometry().getGeometryType());
+        }
+        
         Project updatedProject = projectService.updateProject(id, projectDetails);
         if (updatedProject != null) {
             logger.info("PUT /api/projects/{} - Proyecto actualizado exitosamente: {}", id, updatedProject.getName());

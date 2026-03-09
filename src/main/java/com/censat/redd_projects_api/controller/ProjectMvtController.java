@@ -101,6 +101,7 @@ public class ProjectMvtController {
                     SELECT
                         p.id,
                         p.name,
+                        LOWER(p.name) AS name_lower,
                         p.location,
                         p.departamento,
                         p.description,
