@@ -7,6 +7,8 @@ import com.censat.redd_projects_api.model.Status;
 import com.censat.redd_projects_api.repository.CertifierRepository;
 import com.censat.redd_projects_api.repository.ProjectRepository;
 import com.censat.redd_projects_api.repository.StatusRepository;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +93,10 @@ public class ProjectService {
 
     public Project createProject(Project project) {
         logger.info("ProjectService: Creando nuevo proyecto: {}", project.getName());
+        
+        // Convertir Point a Polygon si es necesario
+        normalizeGeometry(project);
+        
         Project saved = projectRepository.save(project);
         logger.info("ProjectService: Proyecto creado con ID: {}", saved.getId());
         return saved;
@@ -134,6 +140,9 @@ public class ProjectService {
             project.setLink(projectDetails.getLink());
             project.setValidatorString(projectDetails.getValidatorString());
             project.setVerifiersString(projectDetails.getVerifiersString());
+            
+            // Convertir Point a Polygon si es necesario
+            normalizeGeometry(projectDetails);
             project.setLocationGeometry(projectDetails.getLocationGeometry());
             
             // Log después de setear
@@ -182,5 +191,27 @@ public class ProjectService {
     public List<Project> getProjectsByCertifier(CertifierEntity certifier) {
         logger.debug("ProjectService: Buscando proyectos por certificador: {}", certifier.getName());
         return projectRepository.findByCertifier(certifier);
+    }
+    
+    /**
+     * Normaliza la geometría del proyecto convirtiendo puntos a polígonos.
+     * Esto es necesario porque los MVT funcionan mejor con polígonos.
+     * @param project El proyecto a normalizar
+     */
+    private void normalizeGeometry(Project project) {
+        Geometry geometry = project.getLocationGeometry();
+        if (geometry == null) {
+            return;
+        }
+        
+        if (geometry instanceof Point) {
+            logger.info("ProjectService: Convirtiendo Point a Polygon (buffer de ~100m)");
+            Point point = (Point) geometry;
+            // Crear un buffer de ~100 metros alrededor del punto
+            // 0.001 grados ≈ 100 metros en el ecuador
+            Geometry bufferedGeometry = point.buffer(0.005);
+            project.setLocationGeometry(bufferedGeometry);
+            logger.info("ProjectService: Geometría convertida a: {}", bufferedGeometry.getGeometryType());
+        }
     }
 }
