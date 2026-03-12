@@ -29,6 +29,9 @@ public class ProjectSummary {
     private LocalDate queryDate;
     private String link;
 
+    // Geometry indicator
+    private boolean hasGeometry;
+
     // New fields
     private String areaDistribution;
     private String projectAreaHectares;
@@ -69,6 +72,7 @@ public class ProjectSummary {
         this.violatedSafeguards = project.getViolatedSafeguards();
         this.contractType = project.getContractType();
         this.carbonRating = project.getCarbonRating();
+        this.hasGeometry = project.getLocationGeometry() != null;
     }
 
     // Getters and Setters
@@ -150,4 +154,8 @@ public class ProjectSummary {
 
     public String getCarbonRating() { return carbonRating; }
     public void setCarbonRating(String carbonRating) { this.carbonRating = carbonRating; }
+
+    // Geometry indicator
+    public boolean isHasGeometry() { return hasGeometry; }
+    public void setHasGeometry(boolean hasGeometry) { this.hasGeometry = hasGeometry; }
 }
